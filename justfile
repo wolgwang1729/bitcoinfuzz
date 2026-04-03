@@ -47,3 +47,13 @@ docker-build-all:
         echo "---> Building image for $TARGET"
         just docker-build $TARGET || echo -e "---> Failed to build $TARGET"
     done
+
+# Smoke test all targets by building them first, then running them via `docker compose up --no-build` with timeout
+test-all-runs *TARGETS='':
+    #!/usr/bin/env bash
+    set -euo pipefail
+    if [ -z "{{TARGETS}}" ]; then
+        ./scripts/test-all-targets.sh
+    else
+        ./scripts/test-all-targets.sh {{TARGETS}}
+    fi
